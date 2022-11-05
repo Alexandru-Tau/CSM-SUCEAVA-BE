@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @ToString @EqualsAndHashCode
@@ -24,6 +26,9 @@ public class News {
 
     @Enumerated(EnumType.STRING)
     private NewsType newsType;
+
+    @OneToMany(mappedBy = "news",cascade = CascadeType.REMOVE)
+    private List<Hashtag> hashtags;
 
 
 }
