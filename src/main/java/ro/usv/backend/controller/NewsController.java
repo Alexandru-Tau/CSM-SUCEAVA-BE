@@ -7,7 +7,8 @@ import ro.usv.backend.service.NewsService;
 
 import java.util.List;
 
-@RestController("/api/v0/news")
+@RestController
+@RequestMapping("news")
 public class NewsController {
     private final NewsService newsService;
 
