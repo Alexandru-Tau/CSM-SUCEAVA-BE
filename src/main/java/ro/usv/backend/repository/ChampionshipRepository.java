@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ChampionshipRepository extends JpaRepository<Championship, Long> {
-    Championship save(Championship champ);
 
     Optional<Championship> findById(Long id);
 }

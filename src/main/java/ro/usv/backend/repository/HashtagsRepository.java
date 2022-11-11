@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface HashtagsRepository extends JpaRepository<Hashtag, Long> {
 
-
     List<Hashtag> findAllByTag(String tag);
 }

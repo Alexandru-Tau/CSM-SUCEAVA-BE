@@ -8,8 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SponsorsRepository extends JpaRepository<Sponsors, Long> {
-
-    Sponsors save(Sponsors sponsors);
-
     Optional<Sponsors> findById(Long id);
 }

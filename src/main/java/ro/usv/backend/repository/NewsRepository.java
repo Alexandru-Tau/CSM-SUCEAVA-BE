@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
-    News save(News news); //update si create
+  //update si create
     List<News> findAllByHashtags(Hashtag hastags);// read all
     Optional<News> findById(Long id);
     Optional<News> findByTitle(String title);

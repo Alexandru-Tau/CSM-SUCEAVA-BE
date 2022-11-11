@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface CoachRepository extends JpaRepository<Coach, Long> {
-    Coach save(Coach coach);
 
     Optional<Coach> findById(Long id);
 }

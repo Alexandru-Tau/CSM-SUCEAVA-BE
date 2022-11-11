@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ClubRepository extends JpaRepository<Club, Long> {
-    Club save(Club club);
 
     Optional<Club> findById(Long id);
 
