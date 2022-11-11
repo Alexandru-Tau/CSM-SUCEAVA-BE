@@ -22,33 +22,25 @@ public class ChampionshipService {
     }
 
     public ChampionshipDto create(ChampionshipDto champDto) {
-        Championship champ = new Championship();
-        champ.setChampType(champDto.getChampType());
-        champ.setEdition(champDto.getEdition());
-        champ.setTrophy(champDto.getTrophy());
-
+        Championship champ = dtoToModel(champDto, null);
         Championship response = champRepository.save(champ);
+        return modelToDto(response);
 
-        return new ChampionshipDto(response.getId(), response.getChampType(), response.getEdition(), response.getTrophy());
+
     }
 
     public ChampionshipDto update(ChampionshipDto champDto, Long id) {
-        Championship champ = new Championship();
-        champ.setId(id);
-        champ.setChampType(champDto.getChampType());
-        champ.setEdition(champDto.getEdition());
-        champ.setTrophy(champDto.getTrophy());
-
+        Championship champ = dtoToModel(champDto, id);
         Championship response = champRepository.save(champ);
+        return modelToDto(response);
 
-        return new ChampionshipDto(response.getId(), response.getChampType(), response.getEdition(), response.getTrophy());
     }
 
     public ChampionshipDto read(Long value) {
         Optional<Championship> champ = champRepository.findById(value);
         if (champ.isPresent()) {
             Championship response = champ.get();
-            return new ChampionshipDto(response.getId(), response.getChampType(), response.getEdition(), response.getTrophy());
+            return modelToDto(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -59,12 +51,24 @@ public class ChampionshipService {
     public List<ChampionshipDto> readAll() {
 
         return champRepository.findAll().stream()
-                .map(response -> new ChampionshipDto(response.getId(), response.getChampType(),
-                        response.getEdition(), response.getTrophy()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
         champRepository.deleteById(id);
+    }
+
+    Championship dtoToModel(ChampionshipDto dto, Long id) {
+        Championship model = new Championship();
+        model.setChampType(dto.getChampType());
+        model.setEdition(dto.getEdition());
+        model.setTrophy(dto.getTrophy());
+        model.setId(id);
+        return model;
+    }
+
+    ChampionshipDto modelToDto(Championship model) {
+        return new ChampionshipDto(model.getId(), model.getChampType(), model.getEdition(), model.getTrophy());
     }
 }

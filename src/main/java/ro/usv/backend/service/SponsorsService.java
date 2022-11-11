@@ -22,35 +22,22 @@ public class SponsorsService {
     }
 
     public SponsorsDto create(SponsorsDto sponsorsDto) {
-        Sponsors sponsors = new Sponsors();
-        sponsors.setName(sponsorsDto.getName());
-        sponsors.setLogo(sponsorsDto.getLogo());
-        sponsors.setLinkSite(sponsorsDto.getLinkSite());
-        sponsors.setEdition(sponsorsDto.getEdition());
-
+        Sponsors sponsors = dtoToModel(sponsorsDto, null);
         Sponsors response = sponsorsRepository.save(sponsors);
-
-        return new SponsorsDto(response.getId(), response.getName(), response.getLogo(), response.getLinkSite(), response.getEdition());
+        return modelToDto(response);
     }
 
     public SponsorsDto update(SponsorsDto sponsorsDto, Long id) {
-        Sponsors sponsors = new Sponsors();
-        sponsors.setId(id);
-        sponsors.setName(sponsorsDto.getName());
-        sponsors.setLogo(sponsorsDto.getLogo());
-        sponsors.setLinkSite(sponsorsDto.getLinkSite());
-        sponsors.setEdition(sponsorsDto.getEdition());
-
+        Sponsors sponsors = dtoToModel(sponsorsDto, id);
         Sponsors response = sponsorsRepository.save(sponsors);
-
-        return new SponsorsDto(response.getId(), response.getName(), response.getLogo(), response.getLinkSite(), response.getEdition());
+        return modelToDto(response);
     }
 
     public SponsorsDto read(Long value) {
         Optional<Sponsors> sponsors = sponsorsRepository.findById(value);
         if (sponsors.isPresent()) {
             Sponsors response = sponsors.get();
-            return new SponsorsDto(response.getId(), response.getName(), response.getLogo(), response.getLinkSite(), response.getEdition());
+            return modelToDto(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -61,13 +48,28 @@ public class SponsorsService {
     public List<SponsorsDto> readAll() {
 
         return sponsorsRepository.findAll().stream()
-                .map(response -> new SponsorsDto(response.getId(), response.getName(),
-                        response.getLogo(), response.getLinkSite(), response.getEdition()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
         sponsorsRepository.deleteById(id);
+    }
+
+    Sponsors dtoToModel(SponsorsDto dto, Long id) {
+        Sponsors sponsors = new Sponsors();
+        sponsors.setId(id);
+        sponsors.setName(dto.getName());
+        sponsors.setLogo(dto.getLogo());
+        sponsors.setLinkSite(dto.getLinkSite());
+        sponsors.setEdition(dto.getEdition());
+
+        return sponsors;
+    }
+
+    SponsorsDto modelToDto(Sponsors model) {
+        return new SponsorsDto(model.getId(), model.getName(), model.getLogo(), model.getLinkSite(), model.getEdition());
+
     }
 
 }

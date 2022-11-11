@@ -22,31 +22,22 @@ public class AwardService {
     }
 
     public AwardDto create(AwardDto awardDto) {
-        Award award = new Award();
-        award.setDateAward(awardDto.getDateAward());
-        award.setTypeAward(awardDto.getTypeAward());
-
+        Award award = dtoToModel(awardDto, null);
         Award response = awardRepository.save(award);
-
-        return new AwardDto(response.getId(), response.getTypeAward(), response.getDateAward());
+        return modelToAward(response);
     }
 
     public AwardDto update(AwardDto awardDto, Long id) {
-        Award award = new Award();
-        award.setId(id);
-        award.setDateAward(awardDto.getDateAward());
-        award.setTypeAward(awardDto.getTypeAward());
-
+        Award award = dtoToModel(awardDto, id);
         Award response = awardRepository.save(award);
-
-        return new AwardDto(response.getId(), response.getTypeAward(), response.getDateAward());
+        return modelToAward(response);
     }
 
-    public AwardDto read(Long value) {
+    public AwardDto readById(Long value) {
         Optional<Award> award = awardRepository.findById(value);
         if (award.isPresent()) {
             Award response = award.get();
-            return new AwardDto(response.getId(), response.getTypeAward(), response.getDateAward());
+            return modelToAward(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -57,11 +48,24 @@ public class AwardService {
     public List<AwardDto> readAll() {
 
         return awardRepository.findAll().stream()
-                .map(response -> new AwardDto(response.getId(), response.getTypeAward(), response.getDateAward()))
+                .map(this::modelToAward)
                 .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
         awardRepository.deleteById(id);
+    }
+
+    Award dtoToModel(AwardDto dto, Long id) {
+        Award model = new Award();
+        model.setId(id);
+        model.setDateAward(dto.getDateAward());
+        model.setTypeAward(dto.getTypeAward());
+        model.setId(id);
+        return model;
+    }
+
+    AwardDto modelToAward(Award model) {
+        return new AwardDto(model.getId(), model.getTypeAward(), model.getDateAward());
     }
 }

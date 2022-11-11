@@ -22,46 +22,22 @@ public class CoachService {
     }
 
     public CoachDto create(CoachDto coachDto) {
-        Coach coach = new Coach();
-        coach.setName(coachDto.getName());
-        coach.setFirstName(coachDto.getFirstName());
-        coach.setNationality(coachDto.getNationality());
-        coach.setPosition(coachDto.getPosition());
-        coach.setBirthDate(coachDto.getBirthDate());
-        coach.setDescription(coachDto.getDescription());
-
+        Coach coach= dtoToModel(coachDto,null);
         Coach response = coachRepository.save(coach);
-
-        return new CoachDto(response.getId(), response.getName(), response.getFirstName(),
-                response.getNationality(), response.getPosition(), response.getBirthDate(),
-                response.getDescription());
+       return modelToDto(response);
     }
 
     public CoachDto update(CoachDto coachDto, Long id) {
-
-        Coach coach = new Coach();
-        coach.setId(id);
-        coach.setName(coachDto.getName());
-        coach.setFirstName(coachDto.getFirstName());
-        coach.setNationality(coachDto.getNationality());
-        coach.setPosition(coachDto.getPosition());
-        coach.setBirthDate(coachDto.getBirthDate());
-        coach.setDescription(coachDto.getDescription());
-
+        Coach coach= dtoToModel(coachDto,id);
         Coach response = coachRepository.save(coach);
-
-        return new CoachDto(response.getId(), response.getName(), response.getFirstName(),
-                response.getNationality(), response.getPosition(), response.getBirthDate(),
-                response.getDescription());
+        return modelToDto(response);
     }
 
     public CoachDto read(Long value) {
         Optional<Coach> coach = coachRepository.findById(value);
         if (coach.isPresent()) {
             Coach response = coach.get();
-            return new CoachDto(response.getId(), response.getName(), response.getFirstName(),
-                    response.getNationality(), response.getPosition(), response.getBirthDate(),
-                    response.getDescription());
+            return modelToDto(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -72,13 +48,30 @@ public class CoachService {
     public List<CoachDto> readAll() {
 
         return coachRepository.findAll().stream()
-                .map(response -> new CoachDto(response.getId(), response.getName(), response.getFirstName(),
-                        response.getNationality(), response.getPosition(), response.getBirthDate(),
-                        response.getDescription()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
         coachRepository.deleteById(id);
+    }
+
+    Coach dtoToModel(CoachDto dto, Long id) {
+
+        Coach model = new Coach();
+        model.setId(id);
+        model.setName(dto.getName());
+        model.setFirstName(dto.getFirstName());
+        model.setNationality(dto.getNationality());
+        model.setPosition(dto.getPosition());
+        model.setBirthDate(dto.getBirthDate());
+        model.setDescription(dto.getDescription());
+        return model;
+    }
+
+    CoachDto modelToDto(Coach model) {
+        return new CoachDto(model.getId(), model.getName(), model.getFirstName(),
+                model.getNationality(), model.getPosition(), model.getBirthDate(),
+                model.getDescription());
     }
 }

@@ -18,17 +18,17 @@ public class AwardController {
     }
 
     @PostMapping
-    public AwardDto createAward(@RequestBody AwardDto award) {
+    public AwardDto create(@RequestBody AwardDto award) {
         return awardService.create(award);
     }
 
     @GetMapping("/id/{value}")
-    public AwardDto findById(@RequestParam Long value) {
-        return awardService.read(value);
+    public AwardDto readById(@RequestParam Long value) {
+        return awardService.readById(value);
     }
 
     @GetMapping
-    public List<AwardDto> getAll() {
+    public List<AwardDto> readAll() {
         return awardService.readAll();
     }
 

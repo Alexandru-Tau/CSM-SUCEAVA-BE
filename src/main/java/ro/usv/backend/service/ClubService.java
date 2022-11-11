@@ -22,33 +22,22 @@ public class ClubService {
     }
 
     public ClubDto create(ClubDto clubDto) {
-        Club club = new Club();
-        club.setVision(clubDto.getVision());
-        club.setHistory(clubDto.getHistory());
-        club.setTrophy(clubDto.getTrophy());
-
+        Club club = dtoToModel(clubDto, null);
         Club response = clubRepository.save(club);
-
-        return new ClubDto(response.getId(), response.getVision(), response.getHistory(), response.getTrophy());
+        return modelToDto(response);
     }
 
     public ClubDto update(ClubDto clubDto, Long id) {
-        Club club = new Club();
-        club.setId(id);
-        club.setVision(clubDto.getVision());
-        club.setHistory(clubDto.getHistory());
-        club.setTrophy(clubDto.getTrophy());
-
+        Club club = dtoToModel(clubDto, id);
         Club response = clubRepository.save(club);
-
-        return new ClubDto(response.getId(), response.getVision(), response.getHistory(), response.getTrophy());
+        return modelToDto(response);
     }
 
     public ClubDto read(Long value) {
         Optional<Club> club = clubRepository.findById(value);
         if (club.isPresent()) {
             Club response = club.get();
-            return new ClubDto(response.getId(), response.getVision(), response.getHistory(), response.getTrophy());
+            return modelToDto(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -59,12 +48,24 @@ public class ClubService {
     public List<ClubDto> readAll() {
 
         return clubRepository.findAll().stream()
-                .map(response -> new ClubDto(response.getId(), response.getVision(),
-                        response.getHistory(), response.getTrophy()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
         clubRepository.deleteById(id);
+    }
+
+    Club dtoToModel(ClubDto dto, Long id) {
+        Club model = new Club();
+        model.setId(id);
+        model.setVision(dto.getVision());
+        model.setHistory(dto.getHistory());
+        model.setTrophy(dto.getTrophy());
+        return model;
+    }
+
+    ClubDto modelToDto(Club model) {
+        return new ClubDto(model.getId(), model.getVision(), model.getHistory(), model.getTrophy());
     }
 }

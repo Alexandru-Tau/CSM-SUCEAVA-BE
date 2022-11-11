@@ -22,24 +22,15 @@ public class TeamService {
     }
 
     public TeamDto create(TeamDto teamDto) {
-        Team team = new Team();
-        team.setLogo(teamDto.getLogo());
-        team.setTeamType(teamDto.getTeamType());
-
+        Team team = dtoToModel(teamDto, null);
         Team response = teamRepository.save(team);
-
-        return new TeamDto(response.getId(), response.getLogo(), response.getTeamType());
+        return modelToDto(response);
     }
 
     public TeamDto update(TeamDto teamDto, Long id) {
-        Team team = new Team();
-        team.setId(id);
-        team.setLogo(teamDto.getLogo());
-        team.setTeamType(teamDto.getTeamType());
-
+        Team team = dtoToModel(teamDto, id);
         Team response = teamRepository.save(team);
-
-        return new TeamDto(response.getId(), response.getLogo(), response.getTeamType());
+        return modelToDto(response);
     }
 
     public TeamDto read(Long value) {
@@ -63,5 +54,18 @@ public class TeamService {
 
     public void delete(Long id) {
         teamRepository.deleteById(id);
+    }
+
+    Team dtoToModel(TeamDto dto, Long id) {
+        Team team = new Team();
+        team.setId(id);
+        team.setLogo(dto.getLogo());
+        team.setTeamType(dto.getTeamType());
+        return team;
+    }
+
+    TeamDto modelToDto(Team model) {
+        return new TeamDto(model.getId(), model.getLogo(), model.getTeamType());
+
     }
 }

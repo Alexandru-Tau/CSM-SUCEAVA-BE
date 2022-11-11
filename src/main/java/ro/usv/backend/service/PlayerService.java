@@ -22,48 +22,22 @@ public class PlayerService {
     }
 
     public PlayerDto create(PlayerDto playerDto) {
-        Player player = new Player();
-        player.setName(playerDto.getName());
-        player.setFirstName(playerDto.getFirstName());
-        player.setNationality(playerDto.getNationality());
-        player.setPosition(playerDto.getPosition());
-        player.setBirthDate(playerDto.getBirthDate());
-        player.setHeight(playerDto.getHeight());
-        player.setDescription(playerDto.getDescription());
-
+        Player player = dtoToModel(playerDto, null);
         Player response = playerRepository.save(player);
-
-        return new PlayerDto(response.getId(), response.getName(), response.getFirstName(),
-                response.getNationality(), response.getPosition(), response.getBirthDate(),
-                response.getHeight(), response.getDescription());
+        return modelToDto(response);
     }
 
     public PlayerDto update(PlayerDto playerDto, Long id) {
-
-        Player player = new Player();
-        player.setId(id);
-        player.setName(playerDto.getName());
-        player.setFirstName(playerDto.getFirstName());
-        player.setNationality(playerDto.getNationality());
-        player.setPosition(playerDto.getPosition());
-        player.setBirthDate(playerDto.getBirthDate());
-        player.setHeight(playerDto.getHeight());
-        player.setDescription(playerDto.getDescription());
-
+        Player player = dtoToModel(playerDto, id);
         Player response = playerRepository.save(player);
-
-        return new PlayerDto(response.getId(), response.getName(), response.getFirstName(),
-                response.getNationality(), response.getPosition(), response.getBirthDate(),
-                response.getHeight(), response.getDescription());
+        return modelToDto(response);
     }
 
     public PlayerDto read(Long value) {
         Optional<Player> player = playerRepository.findById(value);
         if (player.isPresent()) {
             Player response = player.get();
-            return new PlayerDto(response.getId(), response.getName(), response.getFirstName(),
-                    response.getNationality(), response.getPosition(), response.getBirthDate(),
-                    response.getHeight(), response.getDescription());
+            return modelToDto(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -74,12 +48,31 @@ public class PlayerService {
     public List<PlayerDto> readAll() {
 
         return playerRepository.findAll().stream()
-                .map(response -> new PlayerDto(response.getId(), response.getName(), response.getFirstName(),
-                        response.getNationality(), response.getPosition(), response.getBirthDate(),
-                        response.getHeight(), response.getDescription()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
+
     public void delete(Long id) {
         playerRepository.deleteById(id);
+    }
+
+    Player dtoToModel(PlayerDto dto, Long id) {
+        Player player = new Player();
+        player.setId(id);
+        player.setName(dto.getName());
+        player.setFirstName(dto.getFirstName());
+        player.setNationality(dto.getNationality());
+        player.setPosition(dto.getPosition());
+        player.setBirthDate(dto.getBirthDate());
+        player.setHeight(dto.getHeight());
+        player.setDescription(dto.getDescription());
+        return player;
+    }
+
+    PlayerDto modelToDto(Player model) {
+        return new PlayerDto(model.getId(), model.getName(), model.getFirstName(),
+                model.getNationality(), model.getPosition(), model.getBirthDate(),
+                model.getHeight(), model.getDescription());
+
     }
 }

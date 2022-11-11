@@ -22,47 +22,50 @@ public class PlayerHistoryService {
     }
 
     public PlayerHistoryDto create(PlayerHistoryDto playerHistoryDto) {
-        PlayerHistory playerHistory = new PlayerHistory();
-        playerHistory.setRol(playerHistoryDto.getRol());
-        playerHistory.setPeriod(playerHistoryDto.getPeriod());
-
+        PlayerHistory playerHistory = dtoToModel(playerHistoryDto, null);
         PlayerHistory response = playerHistoryRepository.save(playerHistory);
-
-        return new PlayerHistoryDto(response.getId(), response.getRol(), response.getPeriod());
+        return modelToDto(response);
     }
 
     public PlayerHistoryDto update(PlayerHistoryDto playerHistoryDto, Long id) {
-        PlayerHistory playerHistory = new PlayerHistory();
-        playerHistory.setId(id);
-        playerHistory.setRol(playerHistoryDto.getRol());
-        playerHistory.setPeriod(playerHistoryDto.getPeriod());
-
+        PlayerHistory playerHistory = dtoToModel(playerHistoryDto, id);
         PlayerHistory response = playerHistoryRepository.save(playerHistory);
-
-        return new PlayerHistoryDto(response.getId(), response.getRol(), response.getPeriod());
+        return modelToDto(response);
     }
 
     public PlayerHistoryDto read(Long value) {
         Optional<PlayerHistory> playerHistory = playerHistoryRepository.findById(value);
         if (playerHistory.isPresent()) {
             PlayerHistory response = playerHistory.get();
-            return new PlayerHistoryDto(response.getId(), response.getRol(), response.getPeriod());
+            return modelToDto(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
         }
-
     }
 
     public List<PlayerHistoryDto> readAll() {
 
         return playerHistoryRepository.findAll().stream()
-                .map(response -> new PlayerHistoryDto(response.getId(), response.getRol(), response.getPeriod()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
         playerHistoryRepository.deleteById(id);
+    }
+
+    PlayerHistory dtoToModel(PlayerHistoryDto dto, Long id) {
+        PlayerHistory playerHistory = new PlayerHistory();
+        playerHistory.setId(id);
+        playerHistory.setRol(dto.getRol());
+        playerHistory.setPeriod(dto.getPeriod());
+        return playerHistory;
+    }
+
+    PlayerHistoryDto modelToDto(PlayerHistory model) {
+        return new PlayerHistoryDto(model.getId(), model.getRol(), model.getPeriod());
+
     }
 
 }

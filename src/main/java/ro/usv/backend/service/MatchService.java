@@ -22,41 +22,23 @@ public class MatchService {
     }
 
     public MatchDto create(MatchDto matchDto) {
-        Match match = new Match();
-        match.setMatchDateTime(matchDto.getMatchDateTime());
-        match.setIsFinished(matchDto.getIsFinished());
-        match.setMatchType(matchDto.getMatchType());
-        match.setLocation(matchDto.getLocation());
-        match.setLiveLink(matchDto.getLiveLink());
-        match.setFinalScore(matchDto.getFinalScore());
+        Match match = dtoToModel(matchDto, null);
         Match response = matchRepository.save(match);
-
-        return new MatchDto(response.getId(), matchDto.getMatchDateTime(), matchDto.getIsFinished(),
-                matchDto.getMatchType(), response.getLocation(), matchDto.getLiveLink(), match.getFinalScore());
+        return modelToDto(response);
     }
 
 
     public MatchDto update(MatchDto matchDto, Long id) {
-        Match match = new Match();
-        match.setId(id);
-        match.setMatchDateTime(matchDto.getMatchDateTime());
-        match.setIsFinished(matchDto.getIsFinished());
-        match.setMatchType(matchDto.getMatchType());
-        match.setLocation(matchDto.getLocation());
-        match.setLiveLink(matchDto.getLiveLink());
-        match.setFinalScore(matchDto.getFinalScore());
+        Match match = dtoToModel(matchDto, id);
         Match response = matchRepository.save(match);
-
-        return new MatchDto(response.getId(), response.getMatchDateTime(), response.getIsFinished(),
-                response.getMatchType(), response.getLocation(), response.getLiveLink(), response.getFinalScore());
+        return modelToDto(response);
     }
 
     public MatchDto read(Long value) {
         Optional<Match> match = matchRepository.findById(value);
         if (match.isPresent()) {
             Match response = match.get();
-            return new MatchDto(response.getId(), response.getMatchDateTime(), response.getIsFinished(),
-                    response.getMatchType(), response.getLocation(), response.getLiveLink(), response.getFinalScore());
+            return modelToDto(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -67,13 +49,31 @@ public class MatchService {
     public List<MatchDto> readAll() {
 
         return matchRepository.findAll().stream()
-                .map(response -> new MatchDto(response.getId(), response.getMatchDateTime(), response.getIsFinished(),
-                        response.getMatchType(), response.getLocation(), response.getLiveLink(), response.getFinalScore()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
         matchRepository.deleteById(id);
+    }
+
+    Match dtoToModel(MatchDto dto, Long id) {
+        Match match = new Match();
+        match.setId(id);
+        match.setMatchDateTime(dto.getMatchDateTime());
+        match.setIsFinished(dto.getIsFinished());
+        match.setMatchType(dto.getMatchType());
+        match.setLocation(dto.getLocation());
+        match.setLiveLink(dto.getLiveLink());
+        match.setFinalScore(dto.getFinalScore());
+        return match;
+
+    }
+
+    MatchDto modelToDto(Match model) {
+        return new MatchDto(model.getId(), model.getMatchDateTime(), model.getIsFinished(),
+                model.getMatchType(), model.getLocation(), model.getLiveLink(), model.getFinalScore());
+
     }
 
 }

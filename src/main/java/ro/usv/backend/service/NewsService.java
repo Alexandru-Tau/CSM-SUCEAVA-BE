@@ -31,44 +31,26 @@ public class NewsService {
     }
 
     public NewsDto create(NewsDto newsDto) {
-        News news = new News();
-        news.setTitle(newsDto.getTitle());
-        news.setDescription(newsDto.getDescription());
-        news.setIsPosted(isPosted(newsDto.getIsDraft(), newsDto.getDateTime()));
-        news.setIsAppointed(isAppointed(newsDto.getIsDraft(), news.getIsPosted()));
-        news.setDateTime(newsDto.getDateTime());
-        news.setIsDraft(newsDto.getIsDraft());
-        news.setNewsType(newsDto.getNewsType());
+        News news = dtoToModel(newsDto, null);
         News response = newsRepository.save(news);
         List<Hashtag> hashtagList = getHashtags(response.getDescription(), response);
         hashtagsRepository.saveAll(hashtagList);
-        return new NewsDto(response.getId(), response.getTitle(), response.getDescription(),
-                response.getDateTime(), response.getIsDraft(), response.getNewsType());
+        return modelToDto(response);
     }
 
     public NewsDto update(NewsDto newsDto, Long id) {
-        News news = new News();
-        news.setId(id);
-        news.setTitle(newsDto.getTitle());
-        news.setDescription(newsDto.getDescription());
-        news.setIsPosted(isPosted(newsDto.getIsDraft(), newsDto.getDateTime()));
-        news.setIsAppointed(isAppointed(newsDto.getIsDraft(), news.getIsPosted()));
-        news.setDateTime(newsDto.getDateTime());
-        news.setIsDraft(newsDto.getIsDraft());
-        news.setNewsType(newsDto.getNewsType());
+        News news = dtoToModel(newsDto, id);
         News response = newsRepository.save(news);
         List<Hashtag> hashtagList = getHashtags(response.getDescription(), response);
         hashtagsRepository.saveAll(hashtagList);
-        return new NewsDto(response.getId(), response.getTitle(), response.getDescription(),
-                response.getDateTime(), response.getIsDraft(), response.getNewsType());
+        return modelToDto(response);
     }
 
     public NewsDto read(Long value) {
         Optional<News> news = newsRepository.findById(value);
         if (news.isPresent()) {
             News response = news.get();
-            return new NewsDto(response.getId(), response.getTitle(), response.getDescription(),
-                    response.getDateTime(), response.getIsDraft(), response.getNewsType());
+            return modelToDto(response);
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -79,8 +61,7 @@ public class NewsService {
     public List<NewsDto> readAll() {
 
         return newsRepository.findAll().stream()
-                .map(response -> new NewsDto(response.getId(), response.getTitle(), response.getDescription(),
-                        response.getDateTime(), response.getIsDraft(), response.getNewsType()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
 
@@ -95,8 +76,7 @@ public class NewsService {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList())
                 .stream()
-                .map(response -> new NewsDto(response.getId(), response.getTitle(), response.getDescription(),
-                        response.getDateTime(), response.getIsDraft(), response.getNewsType()))
+                .map(this::modelToDto)
                 .collect(Collectors.toList());
     }
 
@@ -104,8 +84,7 @@ public class NewsService {
         Optional<News> news = newsRepository.findByTitle(value);
         if (news.isPresent()) {
             News response = news.get();
-            return new NewsDto(response.getId(), response.getTitle(), response.getDescription(),
-                    response.getDateTime(), response.getIsDraft(), response.getNewsType());
+            return modelToDto(response);
         } else {
             return null;
         }
@@ -117,12 +96,9 @@ public class NewsService {
         Matcher mat = MY_PATTERN.matcher(description);
         List<String> strs = new ArrayList<>();
         while (mat.find()) {
-            //System.out.println(mat.group(1));
             strs.add(mat.group(1));
 
         }
-        //de facut separatia intre doua # consecutive
-
 
         List<Hashtag> hashtags = new ArrayList<>();
         for (String str : strs) {
@@ -148,6 +124,25 @@ public class NewsService {
         } else {
             return !LocalDateTime.now().isBefore(dateTime);
         }
+    }
+
+    News dtoToModel(NewsDto dto, Long id) {
+        News news = new News();
+        news.setId(id);
+        news.setTitle(dto.getTitle());
+        news.setDescription(dto.getDescription());
+        news.setIsPosted(isPosted(dto.getIsDraft(), dto.getDateTime()));
+        news.setIsAppointed(isAppointed(dto.getIsDraft(), news.getIsPosted()));
+        news.setDateTime(dto.getDateTime());
+        news.setIsDraft(dto.getIsDraft());
+        news.setNewsType(dto.getNewsType());
+        return news;
+    }
+
+    NewsDto modelToDto(News model) {
+        return new NewsDto(model.getId(), model.getTitle(), model.getDescription(),
+                model.getDateTime(), model.getIsDraft(), model.getNewsType());
+
     }
 
 }
