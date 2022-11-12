@@ -41,4 +41,10 @@ public class AwardController {
     public void delete(@RequestParam Long id) {
         awardService.delete(id);
     }
+
+    @PostMapping("/history/{historyId}")
+    public AwardDto awardForHistory(@RequestBody AwardDto award, @RequestParam Long historyId) {
+        return awardService.createAwardForHistory(award,historyId);
+    }
+
 }

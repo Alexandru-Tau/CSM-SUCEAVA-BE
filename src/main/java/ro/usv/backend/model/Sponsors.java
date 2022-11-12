@@ -2,9 +2,7 @@ package ro.usv.backend.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -24,5 +22,9 @@ public class Sponsors {
     private String linkSite;
 
     private String edition;
+
+    @ManyToOne
+    @JoinColumn(name = "club_id", nullable = false)
+    private Club club;
 
 }

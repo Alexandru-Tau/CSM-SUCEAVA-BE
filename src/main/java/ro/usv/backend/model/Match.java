@@ -4,8 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,5 +30,12 @@ public class Match {
     private String liveLink;
 
     private String finalScore;
+
+    @OneToMany(mappedBy = "match",cascade = CascadeType.REMOVE)
+    private List<Team> teams;
+
+    @ManyToOne
+    @JoinColumn(name = "championship_id", nullable = false)
+    private Championship championship;
 
 }

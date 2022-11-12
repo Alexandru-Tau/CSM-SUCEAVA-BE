@@ -2,9 +2,7 @@ package ro.usv.backend.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -21,4 +19,8 @@ public class Award {
     private String typeAward;
 
     private Date dateAward;
+
+    @ManyToOne
+    @JoinColumn(name = "player_history_id", nullable = false)
+    private PlayerHistory playerHistory;
 }

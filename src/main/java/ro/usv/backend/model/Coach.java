@@ -2,9 +2,7 @@ package ro.usv.backend.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -29,6 +27,14 @@ public class Coach {
     private Date birthDate;
 
     private String description;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    private Team team;
+
+    @ManyToOne
+    @JoinColumn(name = "championship_id", nullable = false)
+    private Championship championship;
 
 }
 

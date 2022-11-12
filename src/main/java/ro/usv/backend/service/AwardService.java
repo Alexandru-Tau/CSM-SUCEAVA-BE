@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ro.usv.backend.dto.AwardDto;
+import ro.usv.backend.dto.PlayerHistoryDto;
 import ro.usv.backend.model.Award;
 import ro.usv.backend.repository.AwardRepository;
 
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class AwardService {
     private final AwardRepository awardRepository;
+    private final PlayerHistoryService playerHistoryService;
 
     @Autowired
-    public AwardService(AwardRepository awardRepository) {
+    public AwardService(AwardRepository awardRepository, PlayerHistoryService playerHistoryService) {
         this.awardRepository = awardRepository;
+        this.playerHistoryService = playerHistoryService;
     }
 
     public AwardDto create(AwardDto awardDto) {
@@ -67,5 +70,14 @@ public class AwardService {
 
     AwardDto modelToAward(Award model) {
         return new AwardDto(model.getId(), model.getTypeAward(), model.getDateAward());
+    }
+
+    public AwardDto createAwardForHistory(AwardDto award, Long historyId) {
+        Award model = dtoToModel(award, null);
+        PlayerHistoryDto playerHistoryDto = playerHistoryService.read(historyId);
+        model.setPlayerHistory(playerHistoryService.dtoToModel(playerHistoryDto, playerHistoryDto.getId()));
+        Award response = awardRepository.save(model);
+        return modelToAward(response);
+
     }
 }

@@ -2,11 +2,9 @@ package ro.usv.backend.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,5 +30,12 @@ public class Player {
     private Integer height;
 
     private String description;
+
+    @OneToMany(mappedBy = "player", cascade = CascadeType.REMOVE)
+    private List<PlayerHistory> playerHistories;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 
 }

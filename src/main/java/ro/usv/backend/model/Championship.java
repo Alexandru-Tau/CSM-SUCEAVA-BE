@@ -3,6 +3,7 @@ package ro.usv.backend.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,6 +22,10 @@ public class Championship {
     private String edition;
 
     private String trophy;
+
+    @OneToMany(mappedBy = "championship",cascade = CascadeType.REMOVE)
+    private List<Match> matches;
+
 
 
 }

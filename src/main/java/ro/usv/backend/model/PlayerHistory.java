@@ -3,6 +3,7 @@ package ro.usv.backend.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+
 public class PlayerHistory {
     private @Id
     @GeneratedValue Long id;
@@ -19,4 +21,10 @@ public class PlayerHistory {
 
     private String period;
 
+    @OneToMany(mappedBy = "playerHistory",cascade = CascadeType.REMOVE)
+    private List<Award> awards;
+
+    @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
+    private Player player;
 }
