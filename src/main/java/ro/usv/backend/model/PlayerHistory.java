@@ -25,6 +25,6 @@ public class PlayerHistory {
     private List<Award> awards;
 
     @ManyToOne
-    @JoinColumn(name = "player_id", nullable = false)
+    @JoinColumn(name = "player_id")
     private Player player;
 }

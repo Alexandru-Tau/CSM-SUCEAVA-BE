@@ -80,4 +80,6 @@ public class AwardService {
         return modelToAward(response);
 
     }
+
+    // pentru celelalte conexiuni
 }

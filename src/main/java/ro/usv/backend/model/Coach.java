@@ -33,7 +33,7 @@ public class Coach {
     private Team team;
 
     @ManyToOne
-    @JoinColumn(name = "championship_id", nullable = false)
+    @JoinColumn(name = "championship_id")
     private Championship championship;
 
 }

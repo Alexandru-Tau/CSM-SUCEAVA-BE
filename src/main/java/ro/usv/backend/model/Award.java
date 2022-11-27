@@ -21,6 +21,6 @@ public class Award {
     private Date dateAward;
 
     @ManyToOne
-    @JoinColumn(name = "player_history_id", nullable = false)
+    @JoinColumn(name = "player_history_id")
     private PlayerHistory playerHistory;
 }

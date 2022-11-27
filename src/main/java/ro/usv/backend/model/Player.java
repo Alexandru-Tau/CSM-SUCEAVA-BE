@@ -35,7 +35,7 @@ public class Player {
     private List<PlayerHistory> playerHistories;
 
     @ManyToOne
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "team_id")
     private Team team;
 
 }

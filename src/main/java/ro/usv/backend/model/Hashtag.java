@@ -12,6 +12,6 @@ public class Hashtag {
     private String tag;
 
     @ManyToOne
-    @JoinColumn(name = "news_id", nullable = false)
+    @JoinColumn(name = "news_id")
     private News news;
 }

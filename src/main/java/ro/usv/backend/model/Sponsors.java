@@ -24,7 +24,7 @@ public class Sponsors {
     private String edition;
 
     @ManyToOne
-    @JoinColumn(name = "club_id", nullable = false)
+    @JoinColumn(name = "club_id")
     private Club club;
 
 }

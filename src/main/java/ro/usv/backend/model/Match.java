@@ -35,7 +35,7 @@ public class Match {
     private List<Team> teams;
 
     @ManyToOne
-    @JoinColumn(name = "championship_id", nullable = false)
+    @JoinColumn(name = "championship_id")
     private Championship championship;
 
 }

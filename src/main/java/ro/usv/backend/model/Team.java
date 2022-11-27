@@ -28,10 +28,10 @@ public class Team {
     private Coach coach;
 
     @ManyToOne
-    @JoinColumn(name = "match_id", nullable = false)
+    @JoinColumn(name = "match_id")
     private Match match;
 
     @ManyToOne
-    @JoinColumn(name = "club_id", nullable = false)
+    @JoinColumn(name = "club_id")
     private Club club;
 }
