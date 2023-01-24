@@ -37,7 +37,7 @@ public class TeamService {
         Optional<Team> team = teamRepository.findById(value);
         if (team.isPresent()) {
             Team response = team.get();
-            return new TeamDto(response.getId(), response.getLogo(), response.getTeamType());
+            return new TeamDto(response.getId(), response.getLogo(), response.getName(), response.getTeamType());
         } else {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News Not Found");
@@ -48,7 +48,7 @@ public class TeamService {
     public List<TeamDto> readAll() {
 
         return teamRepository.findAll().stream()
-                .map(response -> new TeamDto(response.getId(), response.getLogo(), response.getTeamType()))
+                .map(response -> new TeamDto(response.getId(), response.getLogo(), response.getName(), response.getTeamType()))
                 .collect(Collectors.toList());
     }
 
@@ -65,7 +65,7 @@ public class TeamService {
     }
 
     TeamDto modelToDto(Team model) {
-        return new TeamDto(model.getId(), model.getLogo(), model.getTeamType());
+        return new TeamDto(model.getId(), model.getLogo(), model.getName(), model.getTeamType());
 
     }
 }

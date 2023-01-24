@@ -13,6 +13,8 @@ public class TeamDto {
 
     private String logo;
 
+    private String name;
+
     private TeamType teamType;
 
 }

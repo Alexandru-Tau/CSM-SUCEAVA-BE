@@ -18,6 +18,8 @@ public class Team {
 
     private String logo;
 
+    private String name;
+
     @Enumerated(EnumType.STRING)
     private TeamType teamType;
 
